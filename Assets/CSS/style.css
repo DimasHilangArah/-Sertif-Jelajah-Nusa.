@@ -1,0 +1,8 @@
+
+@media (min-width: 992px) {
+  .navbar-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
