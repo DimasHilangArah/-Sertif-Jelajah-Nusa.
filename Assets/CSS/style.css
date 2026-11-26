@@ -77,16 +77,27 @@ body {
 
 /* ===== NAVBAR ===== */
 .navbar {
-  --bs-navbar-color: var(--ink-3);
+  --oval-alpha: 0.9;
+  --nav-text: var(--white);
+
+  --bs-navbar-color: var(--nav-text);
+  --bs-navbar-brand-color: var(--nav-text);
+  --bs-navbar-brand-hover-color: var(--nav-text);
   --bs-navbar-hover-color: var(--orange);
   --bs-navbar-active-color: var(--orange);
 
-  position: absolute !important;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
   width: 100%;
-  background: transparent !important;
+  background: transparent;
+  transition: background-color var(--dur-mid) ease;
+}
+
+.navbar-brand {
+  color: var(--nav-text);
+  transition: color var(--dur);
 }
 
 .navbar-brand span {
@@ -120,13 +131,71 @@ body {
   opacity: 1;
 }
 
+.navbar > .container {
+  transition: max-width var(--dur-mid) ease;
+}
+
+/* Tablet dan mobile: setelah di-scroll, navbar diberi latar hijau */
+@media (max-width: 991px) {
+  .navbar.scrolled {
+    background: rgba(18, 55, 42, 0.92);
+    backdrop-filter: blur(8px);
+  }
+
+  .navbar-toggler {
+    filter: invert(1);
+  }
+}
+
+/* Desktop */
 @media (min-width: 992px) {
+  .navbar.scrolled {
+    --nav-text: var(--ink-3);
+  }
+
+  .navbar.scrolled > .container {
+    max-width: 960px;
+  }
+
   .navbar-nav {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: max-content;
     flex-wrap: nowrap;
+  }
+
+  /* Gradasi setengah oval (awalnya tersembunyi) */
+  .navbar::after {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    z-index: -1;
+    width: 1800px;
+    max-width: 100%;
+    height: 230%;
+    background: radial-gradient(
+      ellipse 50% 100% at 50% 0,
+      rgba(251, 250, 246, var(--oval-alpha)) 0%,
+      rgba(251, 250, 246, calc(var(--oval-alpha) * 0.95)) 70%,
+      rgba(251, 250, 246, calc(var(--oval-alpha) * 0.55)) 85%,
+      rgba(251, 250, 246, calc(var(--oval-alpha) * 0.15)) 95%,
+      rgba(251, 250, 246, 0) 100%
+    );
+    filter: blur(12px);
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85);
+    transform-origin: 50% 0;
+    transition:
+      opacity var(--dur-mid) ease,
+      transform var(--dur-mid) ease;
+    pointer-events: none;
+  }
+
+  .navbar.scrolled::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
 }
 

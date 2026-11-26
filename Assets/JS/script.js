@@ -1,15 +1,43 @@
 // ===== 1. NAVBAR =====
 function initNavbar() {
   const links = document.querySelectorAll('.navbar .nav-link');
+  const sections = document.querySelectorAll('section[id]');
 
-  links.forEach(function (link) {
-    link.addEventListener('click', function () {
-      links.forEach(function (l) {
-        l.classList.remove('active');
+  const observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+
+        links.forEach(function (link) {
+          const isActive = link.getAttribute('href') === '#' + entry.target.id;
+          link.classList.toggle('active', isActive);
+
+          if (isActive) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
       });
-      link.classList.add('active');
-    });
+    },
+    { rootMargin: '-50% 0px -50% 0px' }
+  );
+
+  sections.forEach(function (section) {
+    observer.observe(section);
   });
+}
+
+function initNavbarScroll() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar) return;
+
+  function update() {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 }
 
 // ===== 2. DESTINATIONS =====
@@ -155,3 +183,4 @@ function initPackages() {
 initNavbar();
 initDestinations();
 initPackages();
+initNavbarScroll();
